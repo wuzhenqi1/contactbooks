@@ -1,0 +1,273 @@
+#include <string>
+#include <iostream>
+using namespace std;
+#define MAX 1000
+struct person                      //定义通讯人具有的属性
+{
+	string Name;
+	string sex;
+	int age;
+	string phonenumber;
+	string address;
+};
+struct contactbooks
+{
+	struct person parr[MAX];       //定义通讯录里面具有的属性
+	int sizeofbooks;
+};
+void addperson(contactbooks *abs)     //输入11111111111          //添加联系人函数，利用*解出接收通讯录地址
+{
+	
+	if (abs->sizeofbooks == MAX)                     //传入的是地址，要用箭头来去访问abs里面的属性（1.人物属性 2.空间大小）
+	{                                                  
+		cout << "通讯录已满，无法添加:"<<endl;
+	}
+	else                                         //如果没有满，那么就执行添加程序
+	{
+		string name;
+		cout << "请输入姓名：";
+		
+		cin >> name;
+		abs->parr[abs->sizeofbooks].Name = name;
+		cout << endl;
+
+		string sex;
+		cout << "请输入性别：";
+		
+		while (true)                                 //设置一个循环，只有遇到break的时候才能跳出,用于限制用户输入指定的内容
+		{
+			cin >> sex;
+			if (sex == "男" || sex == "女")
+			{
+				abs->parr[abs->sizeofbooks].sex = sex;
+				break;
+			}
+			cout << "输入错误，请输入指定性别" << endl;
+			cout << "如果有男或女以外的性别的话，联系作者马上更正（小声哔哔）" << endl;
+			cout << "请输入性别：";
+		}
+		int age;
+		cout << "请输入年龄：";	
+		cin >> age;
+		abs->parr[abs->sizeofbooks].age = age;
+		cout << endl;
+
+		string phonenumber;
+		cout << "请输入电话号码：";
+		cin >> phonenumber;
+		abs->parr[abs->sizeofbooks].phonenumber= phonenumber;
+		cout << endl;
+
+		string address;
+		cout << "请输入地址：";
+		cin >> address;
+		abs->parr[abs->sizeofbooks].address = address;
+		cout << endl;
+
+		cout << "操作完成，按下任意键继续:>" << endl;
+		abs->sizeofbooks++;
+		system("pause");
+		system("cls");                                          //清屏操作
+		
+	}
+} 
+void showcontactperson(contactbooks *abs)              //输入2222222222222222222，显示联系人
+{
+	if (abs->sizeofbooks == 0)
+	{
+		system("cls");
+		cout << "通讯录为空:>" << endl;
+		system("pause");
+		system("cls");
+	}
+	else
+	{
+		system("cls");
+		cout << "通讯录一共有:" << abs->sizeofbooks << "个人" << endl;
+		for (int i = 0; i < abs->sizeofbooks; i++)
+		{
+			cout << i+1 << ":" << endl;
+			cout << "姓名：" << abs->parr[i].Name << endl;
+			cout << "年龄：" << abs->parr[i].age << endl;
+			cout << "性别：" << abs->parr[i].sex << endl;
+			cout << "电话号码：" << abs->parr[i].phonenumber << endl;
+			cout << "地址：" << abs->parr[i].address << endl;
+		}
+		system("pause");
+		system("cls");
+	}
+}
+int exist(contactbooks* abs, string name)        //输入3333333333333333333                    //检测联系人是否存在
+{
+	for (int i = 0; i < abs->sizeofbooks; i++)
+	{
+		if (abs->parr[i].Name == name)
+		{
+			return i;                          //如果检测到了，就将目标联系人的位次返回，如果没检测到，就返回-1
+		}
+	}
+	return -1;
+}
+void deleteperson(contactbooks *abs)      //现在传入的数据有  1.通讯录 2.在case3中输入的name 3.从exist函数中传回来的i代表联系人在通讯录的第i+1个中，因为i是下标，从零开始
+{
+	system("cls");
+	string name;
+	cout << "请输入你要删除的联系人的名字：";
+	cin >> name;
+	int ret = exist(abs ,name);
+	if (ret == -1)
+	{ 
+		cout << "该联系人不存在:<" << endl;
+		system("pause");
+		system("cls");
+	}
+	else
+	{
+		for (int i = ret; i < abs->sizeofbooks; i++)
+		{
+			abs->parr[i] = abs->parr[i + 1];
+		}
+		abs->sizeofbooks--;                //更新通讯录
+		cout << "删除成功" << endl;
+		system("pause");
+		system("cls");
+	}
+}
+void lookfoorperson(contactbooks *abs)               //输入44444444444444，查找联系人
+{
+	system("cls");
+	string name;
+	cout << "请输入你要显示资料的联系人的名字：";
+	cin >> name;
+	int ret = exist(abs, name);
+	if (ret == -1)
+	{
+		cout << "该联系人不存在:<" << endl;
+		system("pause");
+		system("cls");
+	}
+	else
+	{
+		system("cls");
+		cout << "该联系人的资料为：" << endl;
+		cout << "姓名：" << abs->parr[ret].Name << endl;
+		cout << "年龄：" << abs->parr[ret].age << endl;
+		cout << "性别：" << abs->parr[ret].sex << endl;
+		cout << "电话号码：" << abs->parr[ret].phonenumber << endl;
+		cout << "地址：" << abs->parr[ret].address << endl;
+		system("pause");
+		system("cls");
+	}
+}
+void changeperson(contactbooks* abs)                //输入555555555555555，修改特定联系人的资料
+{
+	system("cls");
+	cout << "请输入你要修改的联系人：";
+	string name;
+	cin >> name;
+	int ret = exist(abs, name);
+	if (ret != -1)
+	{
+		string newname;
+		cout << "请输入新姓名：";
+		cin >> newname;
+		abs->parr[ret].Name = name;
+		cout << endl;
+		string sex;
+		cout << "请输入新性别：";
+		cin >> sex;
+		abs->parr[ret].sex = sex;
+		cout << endl;
+		int age;
+		cout << "请输入新年龄：";
+		cin >> age;
+		abs->parr[ret].age = age;
+		cout << endl;
+		string phonenumber;
+		cout << "请输入新电话号码：";
+		cin >> phonenumber;
+		abs->parr[ret].phonenumber = phonenumber;
+		cout << endl;
+		string address;
+		cout << "请输入新地址：";
+		cin >> address;
+		abs->parr[ret].address = address;
+		cout << endl;
+		cout << "修改成功:>" << endl;
+		system("pause");
+		system("cls");
+	}
+	else
+	{
+		system("cls");
+		cout << "查无此人" << endl;
+		system("pause");
+		system("cls");
+
+	}
+}
+void showmenu()               //显示菜单
+{
+	cout << "**********************" << endl;
+	cout << "*****1.添加联系人*****" << endl;
+	cout << "*****2.显示联系人*****" << endl;
+	cout << "*****3.删除联系人*****" << endl;
+	cout << "*****4.查找联系人*****" << endl;
+	cout << "*****5.修改联系人*****" << endl;
+	cout << "*****6.清空联系人*****" << endl;
+	cout << "*****0.退出通讯录*****" << endl;
+	cout << "**********************" << endl;
+	cout << "您要的功能是：";
+};
+int main()
+{
+	contactbooks abs;             //定义，相当于结构体嵌套结构体的最大库，以后访问这个库都是用abs去访问
+	abs.sizeofbooks = 0;          //初始化当前通讯录人员
+	while (true)                   //设置一个只有碰到break才会跳出的死循环
+	{
+		showmenu();
+		int select = 0;
+		cin >> select;            //输入功能
+		switch (select)           //选择功能
+		{
+		case 1:
+			addperson(&abs);        //传出去的是通讯录地址，通讯录里面有人物数组
+			break;                  
+		case 2:
+			showcontactperson(&abs);   
+			break;
+		case 3:
+		{
+			deleteperson(&abs);
+			break;
+		}
+		case 4:
+		{
+			lookfoorperson(&abs);
+		}
+		         break;
+		case 5: 
+		{
+			changeperson(&abs);
+			break;
+		}
+		case 6:
+			while(abs.sizeofbooks>0)
+			{
+				abs.sizeofbooks--;
+			}
+			cout << "清除成功:>" << endl;
+			system("pause");
+			system("cls");
+			break;
+		case 0:
+			return 0;
+		default:
+			cout << "请输入指定数字:>"<<endl;
+			break;
+		}
+	}
+	system("pause");
+	return 0;
+}
+//四
